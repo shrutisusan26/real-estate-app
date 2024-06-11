@@ -1,5 +1,5 @@
 import SearchBar from "../../components/searchbar/searchBar";
-import "./Home.scss";
+import "./home.scss";
 
 function Home() {
   return (

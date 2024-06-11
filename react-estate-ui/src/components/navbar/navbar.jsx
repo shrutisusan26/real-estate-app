@@ -3,7 +3,7 @@ import "./navbar.scss";
 import { Link } from "react-router-dom";
 function Navbar() {
   const [open, setOnOpen] = useState(false);
-  const user = true ;
+  const user = false ;
   function clickMenu() {
     setOnOpen(!open);
   }
@@ -33,10 +33,10 @@ function Navbar() {
           </div>
         ) : (
           <>
-            <a href="/">Sign In</a>
-            <a href="/" className="signup">
+            <Link to="/login">Sign In</Link>
+            <Link to="/register" className="signup">
               Sign up
-            </a>
+            </Link>
           </>
         )}
         <div className="menuIcon" onClick={clickMenu}>
