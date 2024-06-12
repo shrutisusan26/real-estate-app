@@ -41,7 +41,7 @@ export const login = async (req, res) => {
     // check if password is correct
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
     if (!isPasswordCorrect)
-      return res.status(401).json({ message: "Login not successful" });
+      return res.status(401).json({ message: "Login not successful"});
 
     // if password is correct send cookie to user
     // res.setHeader("Set-Cookie", "test=" + "myValue");
@@ -53,6 +53,7 @@ export const login = async (req, res) => {
       process.env.JWT_SECRET_KEY,
       { expiresIn: age }
     );
+    const { password:userPswd , ...userInfo } = user
 
     res.cookie("token", token, {
         httpOnly: true,
@@ -60,7 +61,8 @@ export const login = async (req, res) => {
         // secure: true
       })
       .status(200)
-      .json({ message: "Login Successful" });
+      .json(userInfo);
+
     // const existingUser =
     // database operations
     // console.log("login endpoint");

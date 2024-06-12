@@ -11,13 +11,15 @@ function Register() {
   const handleSubmit = async (e) =>{
     e.preventDefault();
     setIsLoading(true);
-
+    setError("");
     const formData = new FormData(e.target);
     const username = formData.get('username')
     const email = formData.get('email')
     const password = formData.get('password')
+    
     // console.log(username);
     // console.log(email);
+
     try{
       const res = await apiRequest.post('/auth/register',{
         username,email,password

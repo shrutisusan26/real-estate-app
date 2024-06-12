@@ -13,6 +13,7 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    setError("");
     const formData = new FormData(e.target);
     const username = formData.get("username");
     const password = formData.get("password");
@@ -21,9 +22,11 @@ function Login() {
         username,
         password,
       });
-      console.log(res.data)
+      // console.log(res.data)
+      localStorage.setItem("user" , JSON.stringify(res.data));
+
       setIsLoading(false);
-      navigate("/profile");
+      navigate("/");
     } catch (error) {
       setIsLoading(false);
       setError(error.response.data.message);
