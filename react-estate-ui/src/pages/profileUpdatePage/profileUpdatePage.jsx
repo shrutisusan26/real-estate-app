@@ -3,12 +3,15 @@ import "./profileUpdatePage.scss";
 import { AuthContext } from "../../context/AuthContext";
 import { useContext, useState } from "react";
 import apiRequest from "../../lib/apiRequest";
+import UploadWidget from "../../components/uploadWidget/UploadWidget";
 
 function ProfileUpdatePage() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [err, setError] = useState("");
   const { currentUser, updateUserInfo } = useContext(AuthContext);
+  const [avatar, setAvatar] = useState(currentUser.avatar);
+
   const handleSubmit = async (e) => {
     setError("");
     setLoading(true);
@@ -20,6 +23,7 @@ function ProfileUpdatePage() {
         username,
         email,
         password,
+        avatar
       });
       updateUserInfo(res.data);
       setLoading(false);
@@ -63,10 +67,18 @@ function ProfileUpdatePage() {
       </div>
       <div className="sideContainer">
         <img
-          src={currentUser.avatar || "/noavatar.jpg"}
+          src={avatar || currentUser.avatar || "/noavatar.jpg"}
           alt=""
           className="avatar"
         />
+        <UploadWidget uwConfig={{ 
+          cloudName: "doh3lxjai",
+          uploadPreset: "estate",
+          multiple: false, 
+          maxImageFileSize: 2000000,
+          folder: "avatars",
+        }} setAvatar= {setAvatar} />
+
       </div>
     </div>
   );
