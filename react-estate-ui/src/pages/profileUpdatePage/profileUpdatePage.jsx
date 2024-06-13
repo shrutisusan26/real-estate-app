@@ -23,7 +23,7 @@ function ProfileUpdatePage() {
         username,
         email,
         password,
-        avatar
+        avatar,
       });
       updateUserInfo(res.data);
       setLoading(false);
@@ -71,14 +71,16 @@ function ProfileUpdatePage() {
           alt=""
           className="avatar"
         />
-        <UploadWidget uwConfig={{ 
-          cloudName: "doh3lxjai",
-          uploadPreset: "estate",
-          multiple: false, 
-          maxImageFileSize: 2000000,
-          folder: "avatars",
-        }} setAvatar= {setAvatar} />
-
+        <UploadWidget
+          uwConfig={{
+            cloudName: "doh3lxjai",
+            uploadPreset: "estate",
+            multiple: false,
+            maxImageFileSize: 2000000,
+            folder: "avatars",
+          }}
+          setAvatar={setAvatar}
+        />
       </div>
     </div>
   );
