@@ -10,8 +10,7 @@ function ProfileUpdatePage() {
   const [loading, setLoading] = useState(false);
   const [err, setError] = useState("");
   const { currentUser, updateUserInfo } = useContext(AuthContext);
-  const [avatar, setAvatar] = useState(currentUser.avatar);
-
+  const [avatar, setAvatar] = useState([]);
   const handleSubmit = async (e) => {
     setError("");
     setLoading(true);
@@ -19,11 +18,13 @@ function ProfileUpdatePage() {
     const formData = new FormData(e.target);
     const { username, email, password } = Object.fromEntries(formData);
     try {
+      console.log(avatar);
+
       const res = await apiRequest.put(`/users/${currentUser.id}`, {
         username,
         email,
         password,
-        avatar,
+        avatar: avatar[0],
       });
       updateUserInfo(res.data);
       setLoading(false);
@@ -67,7 +68,7 @@ function ProfileUpdatePage() {
       </div>
       <div className="sideContainer">
         <img
-          src={avatar || currentUser.avatar || "/noavatar.jpg"}
+          src={avatar[0] || currentUser.avatar || "/noavatar.jpg"}
           alt=""
           className="avatar"
         />
@@ -79,7 +80,7 @@ function ProfileUpdatePage() {
             maxImageFileSize: 2000000,
             folder: "avatars",
           }}
-          setAvatar={setAvatar}
+          setState={setAvatar}
         />
       </div>
     </div>
