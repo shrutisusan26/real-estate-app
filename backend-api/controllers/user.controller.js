@@ -39,7 +39,8 @@ export const updateUser = async (req, res) => {
         ...inputs,
       },
     });
-    return res.status(200).json({ message: "Updated user successfully" });
+    const { password:userPswd, ...userInfo } = updatedUser;
+    return res.status(200).json(userInfo);
   } catch (e) {
     console.log(e);
     res.status(500).json({ message: "Failed to get user" });
