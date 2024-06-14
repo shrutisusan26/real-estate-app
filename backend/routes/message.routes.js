@@ -4,7 +4,7 @@ import { verifyToken } from "../middleware/verifyToken.js";
 const router = express.Router();
 
 
-router.post('/save',verifyToken,addMessage)
+router.post('/:chatId',verifyToken,addMessage)
 
 
 

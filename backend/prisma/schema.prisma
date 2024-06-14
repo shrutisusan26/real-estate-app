@@ -91,7 +91,7 @@ model Chat {
   users     User[]    @relation(fields: [userIds], references: [id])
   seenBy    String[]  @db.ObjectId
   messages  Message[]
-  lastMessage String[]
+  lastMessage String?
 }
 
 model Message {

@@ -78,7 +78,15 @@ function Profile() {
       </div>
       <div className="chatContainer">
         <div className="wrapper">
-          <Chat />
+        <Suspense fallback={<p> Loading Chats.... </p>}>
+            <Await
+              resolve={data.chatResponse}
+              errorElement={<p> Error Encountered while fetching chats for user</p>}
+            >
+               
+              {(chatResponse) => <Chat chats={chatResponse.data}/> }
+            </Await>
+          </Suspense>
         </div>
       </div>
     </div>

@@ -1,88 +1,101 @@
-import { useState } from 'react'
-import './chat.scss'
-
-function Chat(){
-    const [chat, setChat] = useState(true);
-
+import { useContext, useState } from "react";
+import "./chat.scss";
+import { AuthContext } from "../../context/AuthContext";
+import apiRequest from "../../lib/apiRequest";
+import { format } from "timeago.js";
+function Chat({ chats }) {
+  const [chat, setChat] = useState(null);
+  const { currentUser } = useContext(AuthContext);
+  const handleOpenChat = async (id, username, avatar) => {
+    try {
+      const res = await apiRequest("/chats/" + id);
+      setChat({ ...res.data, username, avatar });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const formData = new FormData(e.target);
+      const text = formData.get("text");
+      if (!text) return;
+      const res = await apiRequest.post("/messages/" + chat.id, { text });
+      setChat((prev) => ({ ...prev, messages: [...prev.messages, res.data] }));
+      e.target.reset();
+    } catch (e) {
+      console.log(e);
+    }
+  };
   return (
-    <div className='chat'>
-        <div className="messages">
-            <h1>Messages</h1>
-            <div className="message">
-                <img src="https://images.pexels.com/photos/91227/pexels-photo-91227.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt=""/>
-                <span>John Does</span>
-                <p>
-                    Lorem ipsum dolor sit amet.....
-                </p>
+    <div className="chat">
+      <div className="messages">
+        <h1>Messages</h1>
+        {chats.map((chat) => {
+          return (
+            <div
+              className="message"
+              key={chat.id}
+              style={{
+                backgroundColor: chat.seenBy.includes(currentUser.id)
+                  ? "white"
+                  : "#f7c14b85",
+              }}
+              onClick={() =>
+                handleOpenChat(
+                  chat.id,
+                  chat.receiver.username,
+                  chat.receiver.avatar
+                )
+              }
+            >
+              <img src={chat.receiver.avatar || "/noavatar.jpg"} alt="" />
+              <span>{chat.receiver.username}</span>
+              <p>{chat.lastMessage}</p>
             </div>
-            <div className="message">
-                <img src="https://images.pexels.com/photos/91227/pexels-photo-91227.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt=""/>
-                <span>John Does</span>
-                <p>
-                    Lorem ipsum dolor sit amet.....
-                </p>
+          );
+        })}
+      </div>
+      {chat && (
+        <div className="chatBox">
+          <div className="top">
+            <div className="user">
+              <img src={chat.avatar || "/noavatar.jpg"} alt="" />
+              <span>{chat.username} </span>
             </div>
-            <div className="message">
-                <img src="https://images.pexels.com/photos/91227/pexels-photo-91227.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt=""/>
-                <span>John Does</span>
-                <p>
-                    Lorem ipsum dolor sit amet.....
-                </p>
-            </div>
-            <div className="message">
-                <img src="https://images.pexels.com/photos/91227/pexels-photo-91227.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt=""/>
-                <span>John Does</span>
-                <p>
-                    Lorem ipsum dolor sit amet.....
-                </p>
-            </div>
-            <div className="message">
-                <img src="https://images.pexels.com/photos/91227/pexels-photo-91227.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt=""/>
-                <span>John Does</span>
-                <p>
-                    Lorem ipsum dolor sit amet.....
-                </p>
-            </div>
+            <span className="close" onClick={() => setChat(null)}>
+              X
+            </span>
+          </div>
+          <div className="center">
+            {chat.messages.map((message) => {
+              return (
+                <div
+                  className="chatMessage"
+                  style={{
+                    alignSelf:
+                      message.userId === currentUser.id
+                        ? "flex-end"
+                        : "flex-start",
+                    textAlign:
+                      message.userId === currentUser.id ? "right" : "left",
+                  }}
+                  key={message.id}
+                >
+                  <p>{message.text}</p>
+                  <span>{format(message.createdAt)}</span>
+                </div>
+              );
+            })}
+          </div>
+          <form onSubmit={handleSubmit} className="bottom">
+            <textarea name="text"></textarea>
+            <button>Send</button>
+          </form>
         </div>
-        {chat && <div className="chatBox"> 
-        
-            <div className="top">
-                <div className="user">  
-                <img src="https://images.pexels.com/photos/91227/pexels-photo-91227.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt=""/>
-                <span>John Doe </span>
-                </div>
-                <span className="close" onClick={()=> setChat(null)}>X</span>
-
-            </div>
-            <div className="center">
-                <div className="chatMessage">
-                    <p>Lorem ipsum dolor sit amet.....</p>
-                    <span>1 hr ago</span>
-                </div>
-                <div className="chatMessage own">
-                    <p>Lorem ipsum dolor sit amet.....</p>
-                    <span>1 hr ago</span>
-                </div>
-                <div className="chatMessage">
-                    <p>Lorem ipsum dolor sit amet.....</p>
-                    <span>1 hr ago</span>
-                </div>
-                <div className="chatMessage">
-                    <p>Lorem ipsum dolor sit amet.....</p>
-                    <span>1 hr ago</span>
-                </div>
-                <div className="chatMessage">
-                    <p>Lorem ipsum dolor sit amet.....</p>
-                    <span>1 hr ago</span>
-                </div>
-            </div>
-            <div className="bottom">
-                <textarea></textarea>
-                <button>Send</button>
-            </div>
-        </div>}
+      )}
     </div>
-  )
+  );
 }
 
-export default Chat
+export default Chat;

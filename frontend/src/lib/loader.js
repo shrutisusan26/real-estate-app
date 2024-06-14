@@ -9,10 +9,11 @@ export const listPageLoader = async ({ request, params }) => {
   const query = request.url.split("?")[1];
   const res = apiRequest.get("/posts?" + query);
   console.log(res);
-  return defer({ postResponse: res, });
+  return defer({ postResponse: res });
 };
 
 export const profilePageLoader = async () => {
   const res = apiRequest.get("/users/profilePosts");
-  return defer({ profilePosts: res, });
+  const chatPromise = apiRequest.get("/chats");
+  return defer({ profilePosts: res, chatResponse: chatPromise });
 };
