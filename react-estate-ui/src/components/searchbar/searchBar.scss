@@ -1,5 +1,5 @@
 @import "../../responsive.scss";
-*{
+* {
   box-sizing: border-box;
 }
 .searchBar {
@@ -79,19 +79,25 @@
         border: 1px solid #999;
       }
     }
-
-    button {
-      border: none;
-      background-color: #fece51;
-      cursor: pointer;
+    a {
       flex: 1;
+      background-color: #fece51;
+      display: flex;
+      justify-content: center;
+      align-items: center;
 
-      @include sm {
-        padding: 10px;
-      }
-      img {
-        width: 24px;
-        height: 24px;
+      button {
+        border: none;
+        cursor: pointer;
+        background-color: #fece51;
+
+        @include sm {
+          padding: 10px;
+        }
+        img {
+          width: 24px;
+          height: 24px;
+        }
       }
     }
   }

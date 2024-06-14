@@ -1,17 +1,25 @@
 import "./searchBar.scss";
 import { useState } from "react";
-const types =[ 'buy' , 'rent']
+import { Link } from "react-router-dom";
+const types = ["buy", "rent"];
+
 function SearchBar() {
   const [query, setQuery] = useState({
-    type:"buy",
-    location: "",
-    minPrice:0,
-    maxPrice:0,
-  })
-  function typeChange(val){
+    type: "buy",
+    city: "",
+    minPrice: 0,
+    maxPrice: 0,
+  });
+  function typeChange(val) {
     setQuery({
-      ...query, 
-      type:val
+      ...query,
+      type: val,
+    });
+  }
+  function handleChange(e) {
+    setQuery({
+      ...query,
+      [e.target.name]: e.target.value,
     });
   }
 
@@ -19,30 +27,46 @@ function SearchBar() {
     <div className="searchBar">
       <div className="type">
         {types.map((type) => (
-          <button key={type} onClick={()=>typeChange(type)} className={query.type === type? "active" : ""}>{type}</button>
-          ))
-        }
-      </div>
-        <form> 
-          <input type="text" name="location" placeholder="City Location" />
-          <input
-            type="text"
-            name="minPrice"
-            min={0}
-            max={10000000}
-            placeholder="Min Price"
-          />
-          <input
-            type="text"
-            name="maxPrice"
-            min={0}
-            max={10000000}
-            placeholder="Max Price"
-          />
-          <button>
-            <img src="/search.png" alt=""/>
+          <button
+            key={type}
+            onClick={() => typeChange(type)}
+            className={query.type === type ? "active" : ""}
+          >
+            {type}
           </button>
-        </form>
+        ))}
+      </div>
+      <form>
+        <input
+          type="text"
+          name="city"
+          placeholder="City Location"
+          onChange={handleChange}
+        />
+        <input
+          type="text"
+          name="minPrice"
+          min={0}
+          max={10000000}
+          placeholder="Min Price"
+          onChange={handleChange}
+        />
+        <input
+          type="text"
+          name="maxPrice"
+          min={0}
+          max={10000000}
+          placeholder="Max Price"
+          onChange={handleChange}
+        />
+        <Link
+          to={`/browse?type=${query.type}&city=${query.city}&minPrice=${query.minPrice}&maxPrice=${query.maxPrice}`}
+        >
+          <button>
+            <img src="/search.png" alt="" />
+          </button>
+        </Link>
+      </form>
     </div>
   );
 }

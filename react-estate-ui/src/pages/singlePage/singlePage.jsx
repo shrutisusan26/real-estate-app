@@ -3,6 +3,8 @@ import Slider from "../../components/slider/slider.jsx";
 import Map from "../../components/map/map.jsx";
 import { userData } from "../../lib/dummyData";
 import { useLoaderData } from "react-router-dom";
+import DOMPurify from "dompurify";
+
 function SinglePage() {
   const post = useLoaderData();
   console.log(post);
@@ -26,7 +28,12 @@ function SinglePage() {
                 <span>{post.user.name}</span>
               </div>
             </div>
-            <div className="bottom">{post.postDetail.desc}</div>
+            <div
+              className="bottom"
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(post.postDetail.desc)
+              }}
+            ></div>
           </div>
         </div>
       </div>
@@ -60,7 +67,7 @@ function SinglePage() {
               <img src="/fee.png" />
               <div className="itemText">
                 <span>Income Policy</span>
-                
+
                 <p> {post.postDetail.income}</p>
               </div>
             </div>
@@ -74,11 +81,11 @@ function SinglePage() {
             </div>
             <div className="size">
               <img src="/bed.png" alt="" />
-              <span> {post.bedroom } bed</span>
+              <span> {post.bedroom} bed</span>
             </div>
             <div className="size">
               <img src="/bath.png" alt="" />
-              <span> {post.bathroom } bathroom</span>
+              <span> {post.bathroom} bathroom</span>
             </div>
           </div>
 
@@ -89,21 +96,26 @@ function SinglePage() {
               <img src="/school.png" />
               <div className="itemText">
                 <span>School</span>
-                <p>{post.postDetail.school }m away</p>
+                <p>
+                  {post.postDetail.school > 999
+                    ? post.postDetail.school / 1000 + "km"
+                    : post.postDetail.school + "m"}{" "}
+                  away
+                </p>
               </div>
             </div>
             <div className="item">
               <img src="/bus.png" />
               <div className="itemText">
                 <span>Bus Stop</span>
-                <p>{post.postDetail.bus }m away</p>
+                <p>{post.postDetail.bus}m away</p>
               </div>
             </div>
             <div className="item">
               <img src="/fee.png" />
               <div className="itemText">
                 <span>Restaurant</span>
-                <p>{post.postDetail.restaurant }m away </p>
+                <p>{post.postDetail.restaurant}m away </p>
               </div>
             </div>
           </div>

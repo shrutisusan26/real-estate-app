@@ -8,7 +8,7 @@ import SinglePage from "./pages/singlePage/singlePage";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ProfileUpdatePage from "./pages/profileUpdatePage/profileUpdatePage";
 import NewPostPage from "./pages/newPostPage/newPostPage.jsx";
-import { singlePageLoader } from "./lib/loader";
+import { listPageLoader, singlePageLoader } from "./lib/loader";
 function App() {
   const router = createBrowserRouter([
     {
@@ -30,6 +30,7 @@ function App() {
         {
           path: "/browse",
           element: <ListPage />,
+          loader: listPageLoader,
         },
         {
           path: "/:id",

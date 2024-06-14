@@ -3,8 +3,10 @@ import { listData } from '../../lib/dummyData.js'
 import Filter from '../../components/filter/filter'
 import Card from '../../components/card/card';
 import Map from '../../components/map/map';
+import { useLoaderData } from 'react-router-dom';
 function ListPage(){
-  const data = listData;
+  // const data = listData;
+  const data = useLoaderData();
   return (
     <div className='listPage'>
       <div className="listContainer">
