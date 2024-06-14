@@ -8,7 +8,7 @@ import SinglePage from "./pages/singlePage/singlePage";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ProfileUpdatePage from "./pages/profileUpdatePage/profileUpdatePage";
 import NewPostPage from "./pages/newPostPage/newPostPage.jsx";
-import { listPageLoader, singlePageLoader } from "./lib/loader";
+import { listPageLoader, profilePageLoader, singlePageLoader } from "./lib/loader";
 function App() {
   const router = createBrowserRouter([
     {
@@ -46,6 +46,7 @@ function App() {
         {
           path: "/profile",
           element: <Profile />,
+          loader: profilePageLoader,
         },
         {
           path: "/profile/update",
