@@ -40,7 +40,7 @@ function Login() {
           <input
             name="username"
             required
-            minLength={5}
+            minLength={4}
             maxLength={20}
             type="text"
             placeholder="Username"

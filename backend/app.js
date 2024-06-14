@@ -3,6 +3,10 @@ import cors from "cors";
 import authRoutes from "./routes/auth.routes.js";
 import postRoutes from "./routes/posts.routes.js";
 import userRoutes from "./routes/user.routes.js";
+
+import chatRoutes from "./routes/chat.routes.js";
+import messageRoutes from "./routes/message.routes.js";
+
 import cookieParser from "cookie-parser";
 import testRoutes from "./routes/test.routes.js";
 
@@ -17,6 +21,8 @@ app.use("/api/posts", postRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/test" , testRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/chats", chatRoutes);
+app.use("/api/messages", messageRoutes);
 
 app.listen(8800, () => {
   console.log("Server is running!");
