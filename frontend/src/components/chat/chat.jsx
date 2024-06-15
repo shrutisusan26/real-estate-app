@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import "./chat.scss";
 import { AuthContext } from "../../context/AuthContext";
 import apiRequest from "../../lib/apiRequest";
@@ -9,6 +9,10 @@ function Chat({ chats }) {
   const [chat, setChat] = useState(null);
   const { currentUser } = useContext(AuthContext);
   const { socket } = useContext(SocketContext);
+  const messageEndRef = useRef();
+  useEffect(()=>{
+    messageEndRef.current?.scrollIntoView({behavior:"smooth"});
+  },[chat])
   console.log(currentUser)
   const handleOpenChat = async (id,receiver) => {
     try {
@@ -118,6 +122,7 @@ function Chat({ chats }) {
                 </div>
               );
             })}
+          <div ref={messageEndRef}></div>
           </div>
           <form onSubmit={handleSubmit} className="bottom">
             <textarea name="text"></textarea>
