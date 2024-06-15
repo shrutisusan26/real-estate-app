@@ -1,19 +1,24 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import "./chat.scss";
 import { AuthContext } from "../../context/AuthContext";
 import apiRequest from "../../lib/apiRequest";
 import { format } from "timeago.js";
+import { SocketContext } from "../../context/SocketContext";
 function Chat({ chats }) {
+  
   const [chat, setChat] = useState(null);
   const { currentUser } = useContext(AuthContext);
-  const handleOpenChat = async (id, username, avatar) => {
+  const { socket } = useContext(SocketContext);
+  console.log(currentUser)
+  const handleOpenChat = async (id,receiver) => {
     try {
       const res = await apiRequest("/chats/" + id);
-      setChat({ ...res.data, username, avatar });
+      setChat({ ...res.data, receiver });
     } catch (error) {
       console.log(error);
     }
   };
+ 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -23,35 +28,61 @@ function Chat({ chats }) {
       const res = await apiRequest.post("/messages/" + chat.id, { text });
       setChat((prev) => ({ ...prev, messages: [...prev.messages, res.data] }));
       e.target.reset();
+      console.log(chat);
+      socket.emit("sendMessage", {
+        receiverId : chat.receiver.id, 
+        data: res.data,
+      })
     } catch (e) {
       console.log(e);
     }
   };
+
+  useEffect(() =>{
+    const read = async () =>{
+      try{
+        const res = await apiRequest.put("/chats/read/" + chat.id);
+
+      }catch(error) {
+        console.log(error);
+      }
+    }
+    if(chat && socket) {
+      socket.on('getMessage', (data) =>{
+          if(chat.id === data.chatId){
+            setChat(prev => ({...prev, messages: [...prev.messages, data]}));
+            read();
+          }
+      });
+    }
+    return () => {
+      socket.off("getMessage");
+    };
+  },[socket,chat]);
   return (
     <div className="chat">
+      {/* <button onClick={testSocket}> Click Me </button> */}
       <div className="messages">
         <h1>Messages</h1>
-        {chats.map((chat) => {
+        {chats.map((c) => {
           return (
             <div
               className="message"
-              key={chat.id}
+              key={c.id}
               style={{
-                backgroundColor: chat.seenBy.includes(currentUser.id)
+                backgroundColor: c.seenBy.includes(currentUser.id) || chat?.id === c.id
                   ? "white"
                   : "#f7c14b85",
               }}
               onClick={() =>
                 handleOpenChat(
-                  chat.id,
-                  chat.receiver.username,
-                  chat.receiver.avatar
-                )
+                  c.id,
+                  c.receiver  ,              )
               }
             >
-              <img src={chat.receiver.avatar || "/noavatar.jpg"} alt="" />
-              <span>{chat.receiver.username}</span>
-              <p>{chat.lastMessage}</p>
+              <img src={c.receiver.avatar || "/noavatar.jpg"} alt="" />
+              <span>{c.receiver.username}</span>
+              <p>{c.lastMessage}</p>
             </div>
           );
         })}
